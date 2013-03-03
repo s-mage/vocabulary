@@ -3,7 +3,10 @@ Vocabulary
 
 Simple, but looks pretty vocabulary with one table in DB and console interface.
 
-Usage: voc [options]
+Usage
+=====
+
+voc [options]
 
     -a, --add                        Add new words pair
     
@@ -18,3 +21,5 @@ Usage: voc [options]
     -m, --multiadd                   Add many word pairs, separated by " - "
     
     -h, --help                       Show this message
+
+Where voc is simlink to lib/voc_console.rb
