@@ -13,6 +13,7 @@ module Vocabulary::Options
                  q: 'Test your knowledge CNT times',
                  all: 'Prints all vocabulary',
                  m: 'Add many word pairs, separated by " - "',
+                 i: 'Import text file to vocabulary',
                  h: 'Show this message' }
 
     dataset = Vocabulary::Dataset.new
@@ -43,6 +44,10 @@ module Vocabulary::Options
 
     opts.on("-m", "--multiadd", messages[:m]) do
       dataset.multiadd
+    end
+
+    opts.on('-i', '--import FILE', messages[:i]) do |file|
+      dataset.import_file(file)
     end
 
     opts.on_tail("-h", "--help", messages[:h]) do

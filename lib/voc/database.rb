@@ -14,7 +14,7 @@ class Vocabulary::Dataset
     en = STDIN.gets.chomp
     print("[ru]> ")
     ru = STDIN.gets.chomp
-    @dataset.insert(en: en, ru: ru) unless en.empty? || ru.empty?
+    @dataset.insert(en: en, ru: ru) unless (en.empty? || ru.empty?)
   end
 
   # Create hash with all vocabulary from table dataset.
@@ -59,14 +59,28 @@ class Vocabulary::Dataset
     current_string = ''
 
     while not current_string == ':!'
-      insert_pair = current_string.split(' - ')
-
-      if insert_pair.size == 2
-        @dataset.insert(en: insert_pair.first, ru: insert_pair.last)
-      end
-
+      string_processing(current_string)
       print "> "
       current_string = STDIN.gets.chomp
+    end
+  end
+
+  # Adding pair of words, separated by ' - ', to database.
+  #
+  def string_processing(string)
+    insert_pair = string.split(' - ')
+
+    if insert_pair.size == 2
+      @dataset.insert(en: insert_pair.first, ru: insert_pair.last)
+    end
+  end
+
+  # Importing file to database.
+  #
+  def import_file(file)
+    records = IO.readlines(file)
+    Vocabulary::DB.transaction do
+      records.each { |record| string_processing record }
     end
   end
 end
