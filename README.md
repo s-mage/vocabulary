@@ -20,6 +20,8 @@ voc [options]
          
     -m, --multiadd                   Add many word pairs, separated by " - "
     
+    -i, --import FILE                Import text file to vocabulary
+    
     -h, --help                       Show this message
 
 Where voc is simlink to lib/voc_console.rb
