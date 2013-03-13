@@ -17,4 +17,4 @@ voc [options]
     -i, --import FILE                Import text file to vocabulary    
     -h, --help                       Show this message
 
-Where voc is simlink to lib/voc_console.rb
+Where voc is simlink to bin/cli.rb
