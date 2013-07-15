@@ -7,6 +7,43 @@ module Vocabulary::CLI
   # Directions of translation are supported.
   #
   direction = [:en, :ru]
+  model = Vocabulary::Dataset.new
+
+  # Insert dialog in console.
+  #
+  def insert
+    print("[en]> ")
+    en = STDIN.gets.chomp
+    print("[ru]> ")
+    ru = STDIN.gets.chomp
+    model.insert(en, ru)
+  end
+
+  # Test user answers for num times.
+  #
+  def quiz(num, lang1, lang2)
+    num.times do
+      model.random_pair.map do |pair|
+        puts pair[lang1]
+        print "> "
+        user_answer = STDIN.gets.chomp
+        puts pair[lang2] unless pair[lang2] == user_answer
+      end
+    end
+  end
+
+  # Multiple addition to vocabulary.
+  #
+  def multiadd
+    puts 'When you want to stop just type :!'
+    current_string = ''
+
+    while not current_string == ':!'
+      model.string_processing(current_string)
+      print "> "
+      current_string = STDIN.gets.chomp
+    end
+  end
 
   opts = OptionParser.new do |opts|
     opts.banner = 'Usage: voc [options]'
@@ -19,15 +56,12 @@ module Vocabulary::CLI
                  i: 'Import text file to vocabulary',
                  h: 'Show this message' }
 
-    dataset = Vocabulary::Dataset.new
-
-
     opts.on("-a", "--add", messages[:a]) do
-      dataset.insert
+      insert
     end
 
     opts.on("-t", "--translate WORD", messages[:t]) do |word|
-      dataset.translate(word).map { |r| puts r[:en] + " - " + r[:ru] }
+      model.translate(word).map { |r| puts r[:en] + " - " + r[:ru] }
     end
 
     opts.on("-d", "--direction D", [:en, :ru], messages[:d]) do |d|
@@ -36,21 +70,21 @@ module Vocabulary::CLI
     end
 
     opts.on("-q", "--quiz CNT", messages[:q]) do |cnt|
-      dataset.quiz(cnt.to_i, direction.first, direction.last)
+      quiz(cnt.to_i, direction.first, direction.last)
     end
 
     opts.on("--all", messages[:all]) do |v|
-      dataset.all_vocabulary.each_pair do |key, value|
+      model.all_vocabulary.each_pair do |key, value|
         puts "%-40s %s" % [key, value]
       end
     end
 
     opts.on("-m", "--multiadd", messages[:m]) do
-      dataset.multiadd
+      multiadd
     end
 
     opts.on('-i', '--import FILE', messages[:i]) do |file|
-      dataset.import_file(file)
+      model.import_file(file)
     end
 
     opts.on_tail("-h", "--help", messages[:h]) do

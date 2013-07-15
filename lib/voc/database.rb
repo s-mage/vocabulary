@@ -7,13 +7,9 @@ class Vocabulary::Dataset
     @dataset = Vocabulary::DB[:voc]
   end
 
-  # Insert dialog in console.
+  # Insert word-translation pair to database.
   #
-  def insert
-    print("[en]> ")
-    en = STDIN.gets.chomp
-    print("[ru]> ")
-    ru = STDIN.gets.chomp
+  def insert(en, ru)
     @dataset.insert(en: en, ru: ru) unless (en.empty? || ru.empty?)
   end
 
@@ -37,32 +33,6 @@ class Vocabulary::Dataset
     cnt = @dataset.map { |r| r[:id] }
     rand_id = cnt[rand(0...cnt.size)]
     @dataset.select(:en, :ru).where(id: rand_id)
-  end
-
-  # Test user answers for num times.
-  #
-  def quiz(num, lang1, lang2)
-    num.times do
-      random_pair.map do |pair|
-        puts pair[lang1]
-        print "> "
-        user_answer = STDIN.gets.chomp
-        puts pair[lang2] unless pair[lang2] == user_answer
-      end
-    end
-  end
-
-  # Multiple addition to vocabulary.
-  #
-  def multiadd
-    puts 'When you want to stop just type :!'
-    current_string = ''
-
-    while not current_string == ':!'
-      string_processing(current_string)
-      print "> "
-      current_string = STDIN.gets.chomp
-    end
   end
 
   # Adding pair of words, separated by ' - ', to database.
